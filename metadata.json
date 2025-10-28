@@ -1,0 +1,5 @@
+{
+  "name": "UTProyex - Repositorio de Proyectos Universitarios",
+  "description": "Una aplicación web para que los estudiantes universitarios suban, compartan y reciban comentarios sobre sus proyectos escolares. Incluye funciones de IA para análisis y originalidad de proyectos.",
+  "requestFramePermissions": []
+}
