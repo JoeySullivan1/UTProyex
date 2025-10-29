@@ -49,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onNavigate, user
                   </div>
                 )}
               </div>
-              <button onClick={() => onNavigate(Page.Profile)} className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 transition-colors">
+              <button onClick={() => onNavigate(Page.Profile)} className="flex items-center space-x-2 p-2 rounded-md hover:bg-green-100 transition-colors">
                 <UserCircleIcon className="w-8 h-8 text-gray-500" />
                 <span className="font-medium text-gray-700 hidden lg:inline">{currentUser.fullName}</span>
               </button>
@@ -63,7 +63,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onNavigate, user
               </button>
             </>
           ) : (
-            <span className="text-gray-600">Bienvenido al repositorio de proyectos</span>
+            <span className="text-gray-600">Bienvenido a UTProyex</span>
           )}
         </nav>
       </div>

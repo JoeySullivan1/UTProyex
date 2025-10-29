@@ -1,15 +1,15 @@
 import { User, Project } from '../types';
 
 export const mockUsers: User[] = [
-  { id: 'u1', fullName: 'Ana Torres', email: 'ana.torres@utparral.edu.mx' },
-  { id: 'u2', fullName: 'Luis Vega', email: 'luis.vega@utparral.edu.mx' },
-  { id: 'u3', fullName: 'Carla Solis', email: 'carla.solis@utparral.edu.mx' },
-  { id: 'u4', fullName: 'Pedro Marquez', email: 'pedro.marquez@utparral.edu.mx' },
+  { id: 'u1', fullName: 'Ana Torres', email: '1234567890@utparral.edu.mx' },
+  { id: 'u2', fullName: 'Luis Vega', email: '0987654321@utparral.edu.mx' },
+  { id: 'u3', fullName: 'Carla Solis', email: '1111111111@utparral.edu.mx' },
+  { id: 'u4', fullName: 'Pedro Marquez', email: '2222222222@utparral.edu.mx' },
 ];
 
 const today = new Date();
 const oldDate = new Date();
-oldDate.setDate(today.getDate() - 10); // Set date to 10 days ago
+oldDate.setDate(today.getDate() - 10); 
 
 export const mockProjects: Project[] = [
   {
@@ -26,7 +26,7 @@ export const mockProjects: Project[] = [
     ],
     originalityScore: 88,
     originalityJustification: 'El proyecto combina tecnologías IoT de manera efectiva para una aplicación práctica y relevante, aunque existen soluciones similares en el mercado.',
-    createdAt: oldDate.toISOString(), // More than 5 days ago, not editable
+    createdAt: oldDate.toISOString(), // Si pasan mas de 5 dias ya no se puede editar!
   },
   {
     id: 'p2',
@@ -42,7 +42,7 @@ export const mockProjects: Project[] = [
     comments: [],
     originalityScore: 95,
     originalityJustification: 'La integración de visión por computadora con un brazo robótico de diseño propio demuestra un alto nivel de innovación y complejidad técnica.',
-    createdAt: '2024-04-20T09:00:00Z', // Very old, not editable
+    createdAt: '2024-04-20T09:00:00Z', // Si es muy viejo pues ya no se puede editar
   },
    {
     id: 'p3',
@@ -57,6 +57,6 @@ export const mockProjects: Project[] = [
     ],
     originalityScore: 92,
     originalityJustification: 'La aplicación de machine learning para la personalización del aprendizaje es un campo avanzado y relevante, mostrando una fuerte innovación conceptual.',
-    createdAt: today.toISOString(), // Created today, so it is editable
+    createdAt: today.toISOString(), // Si se creo este mismo dia si se puede editar!
   },
 ];

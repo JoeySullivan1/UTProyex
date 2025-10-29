@@ -17,7 +17,7 @@ const App: React.FC = () => {
   const [users, setUsers] = useState<User[]>(mockUsers);
 
   useEffect(() => {
-    // Simulate fetching projects on initial load
+    
     setProjects(mockProjects);
   }, []);
 
@@ -45,7 +45,7 @@ const App: React.FC = () => {
   const handleNavigate = (page: Page) => {
     setCurrentPage(page);
     setSelectedProjectId(null);
-    setProjectToEdit(null); // Reset edit state on any navigation
+    setProjectToEdit(null); 
   };
 
   const handleSelectProject = (projectId: string) => {
@@ -62,14 +62,14 @@ const App: React.FC = () => {
     setProjects(prevProjects => 
       prevProjects.map(p => p.id === updatedProject.id ? updatedProject : p)
     );
-    handleNavigate(Page.Profile); // Navigate to profile after update
+    handleNavigate(Page.Profile); 
   };
 
   const handleStartEdit = (projectId: string) => {
     const project = projects.find(p => p.id === projectId);
     if (project) {
       setProjectToEdit(project);
-      setCurrentPage(Page.Upload); // Reuse UploadPage for editing
+      setCurrentPage(Page.Upload); 
     }
   };
 

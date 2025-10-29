@@ -5,7 +5,6 @@ import { getProjectInsightsStream } from '../services/geminiService';
 import { UserGroupIcon, PaperClipIcon, CalendarDaysIcon, ChatBubbleLeftRightIcon, PaperAirplaneIcon, SparklesIcon, ArrowUturnLeftIcon, CheckBadgeIcon } from '../components/Icons';
 import Spinner from '../components/Spinner';
 
-// Helper component for AI Chat
 interface AIChatProps {
   project: Project;
 }
@@ -90,7 +89,7 @@ const AIChat: React.FC<AIChatProps> = ({ project }) => {
 };
 
 
-// Helper component for Comments
+
 interface CommentSectionProps {
   project: Project;
   currentUser: User;
@@ -147,7 +146,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ project, currentUser, o
     );
 };
 
-// Main Project Page Component
+
 interface ProjectPageProps {
   project: Project;
   currentUser: User;

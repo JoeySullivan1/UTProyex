@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { User } from '../types';
-import { BookOpenIcon } from '../components/Icons';
+import Logo from '/Logo.png';
 
 interface AuthPageProps {
   onLogin: (user: User) => void;
@@ -60,12 +60,12 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin, onRegister, existingUsers 
     <div className="flex items-center justify-center min-h-[calc(100vh-150px)] bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg">
         <div className="flex flex-col items-center">
-          <BookOpenIcon className="w-12 h-12 text-emerald-600" />
+          <img src={Logo} alt="Logo" className="w-24 h-24" />
           <h2 className="mt-4 text-3xl font-extrabold text-center text-gray-900">
             {isLogin ? 'Inicia Sesión' : 'Crea tu Cuenta'}
           </h2>
           <p className="mt-2 text-sm text-center text-gray-600">
-            {isLogin ? 'Para acceder a tu repositorio de proyectos' : 'Únete al repositorio de proyectos'}
+            {isLogin ? 'Para acceder a tu repositorio' : 'Únete al repositorio de proyectos'}
           </p>
         </div>
 
