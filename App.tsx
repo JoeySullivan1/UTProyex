@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Project, User, Page, Comment as CommentType } from './types';
-import { mockProjects, mockUsers } from './data/mockData';
+import { mockUsers } from './data/mockData';
 import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
 import ProjectPage from './pages/ProjectPage';
 import UploadPage from './pages/UploadPage';
 import ProfilePage from './pages/ProfilePage';
 import Header from './components/Header';
+import { getProjects } from './services/projectService';
+
 
 const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -14,12 +16,31 @@ const App: React.FC = () => {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<User[]>(mockUsers);
 
-  useEffect(() => {
-    
-    setProjects(mockProjects);
-  }, []);
+  
+ useEffect(() => {
+  
+  const fetchProjects = async () => {
+     try {
+      if (!currentUser) {
+        // 👇 Si no hay usuario, detener carga y mostrar login
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
+      const data = await getProjects();
+      setProjects(data);
+    } catch (error) {
+      console.error('Error al obtener proyectos:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchProjects();
+}, [currentUser]);
 
   useEffect(() => {
     if (currentUser) {
@@ -86,6 +107,9 @@ const App: React.FC = () => {
   const userProjectCount = currentUser ? projects.filter(p => p.owner.id === currentUser.id).length : 0;
 
   const renderPage = () => {
+      if (currentUser && loading) {
+    return <p className="text-center text-gray-500">Cargando proyectos...</p>;
+  }
     switch (currentPage) {
       case Page.Auth:
         return <AuthPage onLogin={handleLogin} onRegister={handleRegister} existingUsers={users} />;
@@ -122,6 +146,7 @@ const App: React.FC = () => {
       default:
         return <AuthPage onLogin={handleLogin} onRegister={handleRegister} existingUsers={users} />;
     }
+
   };
 
   return (
