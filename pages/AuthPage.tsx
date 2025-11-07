@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { User } from '../types';
 import Logo from '/Logo.png';
@@ -18,6 +17,23 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin, onRegister, existingUsers 
 
   const validateEmail = (email: string): boolean => {
     return email.toLowerCase().endsWith('@utparral.edu.mx');
+  };
+
+  // <<< NUEVA FUNCIÓN DE VALIDACIÓN DE CONTRASEÑA >>>
+  /**
+   * Valida la contraseña según las reglas de negocio.
+   * @param pass La contraseña a validar.
+   * @returns Un string con el mensaje de error, o un string vacío si es válida.
+   */
+  const validatePassword = (pass: string): string => {
+    if (pass.length < 8) {
+      return 'La contraseña debe tener al menos 8 caracteres.';
+    }
+    // Usamos una expresión regular para verificar si hay al menos una mayúscula
+    if (!/[A-Z]/.test(pass)) {
+      return 'La contraseña debe contener al menos una letra mayúscula.';
+    }
+    return ''; // Sin errores
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -44,9 +60,18 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin, onRegister, existingUsers 
         return;
       }
       if (!fullName) {
-          setError('El nombre completo es requerido.');
-          return;
+        setError('El nombre completo es requerido.');
+        return;
       }
+
+      // <<< AQUÍ SE INSERTA LA NUEVA VALIDACIÓN >>>
+      const passwordError = validatePassword(password);
+      if (passwordError) {
+        setError(passwordError);
+        return; // Detiene el envío si hay un error
+      }
+      // <<< FIN DE LA VALIDACIÓN >>>
+
       const newUser: User = {
         id: `u${Date.now()}`,
         fullName,
@@ -112,6 +137,12 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin, onRegister, existingUsers 
               className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
               placeholder="********"
             />
+            {/* <<< MENSAJE DE AYUDA (OPCIONAL PERO RECOMENDADO) >>> */}
+            {!isLogin && (
+              <p className="mt-2 text-xs text-gray-500">
+                Debe tener al menos 8 caracteres y una mayúscula.
+              </p>
+            )}
           </div>
 
           {error && <p className="text-sm text-red-600">{error}</p>}

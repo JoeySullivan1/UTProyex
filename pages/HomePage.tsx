@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Project } from '../types';
 import ProjectCard from '../components/ProjectCard';

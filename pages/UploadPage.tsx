@@ -21,6 +21,7 @@ const UploadPage: React.FC<UploadPageProps> = ({ currentUser, allUsers, onAddPro
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
+  const [progress, setProgress] = useState(50);
   const [participants, setParticipants] = useState<User[]>([currentUser]);
   const [participantEmail, setParticipantEmail] = useState('');
   const [participantError, setParticipantError] = useState('');
@@ -36,11 +37,16 @@ const UploadPage: React.FC<UploadPageProps> = ({ currentUser, allUsers, onAddPro
       setCategory(projectToEdit.category);
       setParticipants(projectToEdit.participants);
       setExistingFiles(projectToEdit.files);
+      setProgress(projectToEdit.progress);
       setNewFiles([]);
     } else {
+        setTitle('');
+        setDescription('');
+        setCategory('');
         setParticipants([currentUser]);
         setNewFiles([]);
         setExistingFiles([]);
+        setProgress(50);
     }
   }, [projectToEdit, isEditMode, currentUser]);
 
@@ -98,13 +104,14 @@ const UploadPage: React.FC<UploadPageProps> = ({ currentUser, allUsers, onAddPro
       }));
 
       if (isEditMode && projectToEdit) {
-        const updatedProject = {
+        const updatedProject: Project = {
           ...projectToEdit,
           title,
           description,
           category,
           participants,
           files: [...existingFiles, ...newProjectFiles],
+          progress,
         };
         onUpdateProject(updatedProject);
       } else {
@@ -121,6 +128,7 @@ const UploadPage: React.FC<UploadPageProps> = ({ currentUser, allUsers, onAddPro
           originalityScore: originalityResult.score,
           originalityJustification: originalityResult.justification,
           createdAt: new Date().toISOString(),
+          progress,
         };
         onAddProject(newProject);
       }
@@ -154,14 +162,31 @@ const UploadPage: React.FC<UploadPageProps> = ({ currentUser, allUsers, onAddPro
           <label htmlFor="description" className="block text-sm font-medium text-gray-700">Descripción Detallada</label>
           <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} rows={8} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500" required placeholder="Describe tu proyecto, los objetivos, la tecnología utilizada, etc. Mientras más detallado, mejor será el análisis de originalidad." />
         </div>
-
-        <div>
-            <label htmlFor="category" className="block text-sm font-medium text-gray-700">Categoría</label>
-            <select id="category" value={category} onChange={(e) => setCategory(e.target.value)} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 bg-white" required>
-                <option value="" disabled>Selecciona una categoría</option>
-                {projectCategories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
-            </select>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label htmlFor="category" className="block text-sm font-medium text-gray-700">Categoría</label>
+                <select id="category" value={category} onChange={(e) => setCategory(e.target.value)} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 bg-white" required>
+                    <option value="" disabled>Selecciona una categoría</option>
+                    {projectCategories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                </select>
+            </div>
+            <div>
+                <label htmlFor="progress" className="block text-sm font-medium text-gray-700">
+                    Estado del Proyecto: <span className="font-bold text-emerald-600">{progress}%</span>
+                </label>
+                <input 
+                    type="range" 
+                    id="progress" 
+                    min="50" 
+                    max="100" 
+                    value={progress} 
+                    onChange={(e) => setProgress(Number(e.target.value))}
+                    className="mt-1 block w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
+                />
+            </div>
         </div>
+
 
         <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Archivos Adjuntos</label>

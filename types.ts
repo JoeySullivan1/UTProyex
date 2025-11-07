@@ -30,6 +30,7 @@ export interface Project {
   originalityScore: number;
   originalityJustification: string;
   createdAt: string;
+  progress: number;
 }
 
 export enum Page {
