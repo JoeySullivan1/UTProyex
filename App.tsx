@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Project, User, Page, Comment as CommentType } from './types';
-import { mockUsers } from './data/mockData';
+import { Project, User, Page } from './types';
+// Eliminamos mockUsers e importaciones de datos falsos
 import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
 import ProjectPage from './pages/ProjectPage';
 import UploadPage from './pages/UploadPage';
 import ProfilePage from './pages/ProfilePage';
 import Header from './components/Header';
-import { getProjects } from './services/projectService';
-
+import Footer from './components/Footer';
 
 const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -16,21 +15,24 @@ const App: React.FC = () => {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [users, setUsers] = useState<User[]>(mockUsers);
+  const [loading, setLoading] = useState(false);
 
-  
- useEffect(() => {
-  
+  // --- CARGAR PROYECTOS DESDE EL BACKEND (FEED) ---
   const fetchProjects = async () => {
-     try {
-      if (!currentUser) {
-        // 👇 Si no hay usuario, detener carga y mostrar login
-        setLoading(false);
-        return;
+    // Si no hay usuario, no intentamos cargar nada
+    if (!currentUser) {
+       setLoading(false);
+       return;
+    }
+
+    setLoading(true);
+    try {
+      // Conexión al Backend real
+      const response = await fetch('http://189.154.34.131:4000/api/projects');
+      if (!response.ok) {
+        throw new Error('Error al conectar con el servidor');
       }
-      setLoading(true);
-      const data = await getProjects();
+      const data = await response.json();
       setProjects(data);
     } catch (error) {
       console.error('Error al obtener proyectos:', error);
@@ -39,12 +41,17 @@ const App: React.FC = () => {
     }
   };
 
-  fetchProjects();
-}, [currentUser]);
+  // Cargar proyectos cuando cambia el usuario (login) o volvemos al Home
+  useEffect(() => {
+    if (currentUser && currentPage === Page.Home) {
+      fetchProjects();
+    }
+  }, [currentUser, currentPage]);
 
+  // Manejo de Sesión
   useEffect(() => {
     if (currentUser) {
-      setCurrentPage(Page.Home);
+      if (currentPage === Page.Auth) setCurrentPage(Page.Home);
     } else {
       setCurrentPage(Page.Auth);
     }
@@ -52,15 +59,20 @@ const App: React.FC = () => {
 
   const handleLogin = (user: User) => {
     setCurrentUser(user);
+    setCurrentPage(Page.Home);
   };
 
   const handleLogout = () => {
     setCurrentUser(null);
+    setCurrentPage(Page.Auth);
+    setProjects([]);
+    setSelectedProjectId(null);
   };
 
+  // El registro ahora lo maneja el backend, aquí solo recibimos el usuario logueado
   const handleRegister = (user: User) => {
-    setUsers([...users, user]);
     setCurrentUser(user);
+    setCurrentPage(Page.Home);
   };
 
   const handleNavigate = (page: Page) => {
@@ -74,16 +86,15 @@ const App: React.FC = () => {
     setCurrentPage(Page.Project);
   };
 
+  // Al agregar, volvemos al Home y recargamos la lista del servidor
   const handleAddProject = (project: Project) => {
-    setProjects(prevProjects => [project, ...prevProjects]);
     handleNavigate(Page.Home);
+    fetchProjects(); 
   };
   
   const handleUpdateProject = (updatedProject: Project) => {
-    setProjects(prevProjects => 
-      prevProjects.map(p => p.id === updatedProject.id ? updatedProject : p)
-    );
     handleNavigate(Page.Profile); 
+    // ProfilePage recargará sus propios datos al montarse
   };
 
   const handleStartEdit = (projectId: string) => {
@@ -94,67 +105,70 @@ const App: React.FC = () => {
     }
   };
 
-  const handleAddComment = (projectId: string, comment: CommentType) => {
-    setProjects(prevProjects => 
-      prevProjects.map(p => 
-        p.id === projectId 
-          ? { ...p, comments: [...p.comments, comment] }
-          : p
-      )
-    );
-  };
-
+  // Calcular proyectos del usuario (Opcional, solo para el Header)
   const userProjectCount = currentUser ? projects.filter(p => p.owner.id === currentUser.id).length : 0;
 
   const renderPage = () => {
-      if (currentUser && loading) {
-    return <p className="text-center text-gray-500">Cargando proyectos...</p>;
-  }
+    if (currentUser && loading && projects.length === 0 && currentPage === Page.Home) {
+        return <div className="flex justify-center mt-20"><p className="text-gray-500">Cargando proyectos...</p></div>;
+    }
+
     switch (currentPage) {
       case Page.Auth:
-        return <AuthPage onLogin={handleLogin} onRegister={handleRegister} existingUsers={users} />;
+        return <AuthPage onLogin={handleLogin} onRegister={handleRegister} />;
+        
       case Page.Home:
         return <HomePage projects={projects} onSelectProject={handleSelectProject} />;
+        
       case Page.Project:
-        const project = projects.find(p => p.id === selectedProjectId);
-        if (project && currentUser) {
-          return <ProjectPage project={project} currentUser={currentUser} onAddComment={handleAddComment} onBack={() => handleNavigate(Page.Home)} />;
+        // IMPORTANTE: Aquí pasamos solo el ID. ProjectPage se encargará de buscar los datos frescos (incluidos comentarios).
+        if (selectedProjectId && currentUser) {
+          return (
+            <ProjectPage 
+                projectId={selectedProjectId} 
+                currentUser={currentUser} 
+                onBack={() => handleNavigate(Page.Home)} 
+            />
+          );
         }
         return <HomePage projects={projects} onSelectProject={handleSelectProject} />;
+        
       case Page.Upload:
         if (currentUser) {
           return <UploadPage 
                     currentUser={currentUser} 
-                    allUsers={users} 
+                    allUsers={[currentUser]} 
                     onAddProject={handleAddProject}
                     projectToEdit={projectToEdit}
                     onUpdateProject={handleUpdateProject}
                     userProjectCount={userProjectCount}
                  />;
         }
-        return <AuthPage onLogin={handleLogin} onRegister={handleRegister} existingUsers={users} />;
+        return <AuthPage onLogin={handleLogin} onRegister={handleRegister} />;
+        
       case Page.Profile:
         if (currentUser) {
+            // ProfilePage ahora busca sus propios datos en la BD
             return <ProfilePage 
                     currentUser={currentUser} 
-                    projects={projects} 
                     onSelectProject={handleSelectProject} 
                     onStartEdit={handleStartEdit}
                    />;
         }
-        return <AuthPage onLogin={handleLogin} onRegister={handleRegister} existingUsers={users} />;
+        return <AuthPage onLogin={handleLogin} onRegister={handleRegister} />;
+        
       default:
-        return <AuthPage onLogin={handleLogin} onRegister={handleRegister} existingUsers={users} />;
+        return <AuthPage onLogin={handleLogin} onRegister={handleRegister} />;
     }
-
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans">
+    <div className="min-h-screen bg-gray-100 font-sans flex flex-col">
       <Header currentUser={currentUser} onLogout={handleLogout} onNavigate={handleNavigate} userProjectCount={userProjectCount} />
-      <main className="container mx-auto p-4 md:p-8">
+      <main className="container mx-auto p-4 md:p-8 flex-grow">
         {renderPage()}
       </main>
+      <Footer />
     </div>
   );
 };
