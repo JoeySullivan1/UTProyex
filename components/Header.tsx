@@ -1,6 +1,7 @@
 import React from 'react';
 import { User, Page } from '../types';
-import { BookOpenIcon, UserCircleIcon, ArrowRightOnRectangleIcon, HomeIcon, PlusCircleIcon } from './Icons';
+import { UserCircleIcon, ArrowRightOnRectangleIcon, HomeIcon, PlusCircleIcon } from './Icons';
+import Logo from '/Logochico.png';
 
 interface HeaderProps {
   currentUser: User | null;
@@ -17,9 +18,9 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onNavigate, user
           className="flex items-center space-x-2 cursor-pointer"
           onClick={() => currentUser ? onNavigate(Page.Home) : onNavigate(Page.Auth)}
         >
-          
-          <h1 className="text-2xl font-bold text-green-500 hidden md:block">
-            UTP<span className="text-black">royex</span>
+          <img src={Logo} alt="Logo" className="w-8 h-8" />
+          <h1 className="text-2xl font-bold text-green-600 hidden md:block">
+            UT<span className="text-black">Proyex</span>
           </h1>
         </div>
         <nav className="flex items-center space-x-4">
@@ -49,13 +50,13 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogout, onNavigate, user
                   </div>
                 )}
               </div>
-              <button onClick={() => onNavigate(Page.Profile)} className="flex items-center space-x-2 p-2 rounded-md hover:bg-green-100 transition-colors">
-                <UserCircleIcon className="w-8 h-8 text-gray-500" />
-                <span className="font-medium text-gray-700 hidden lg:inline">{currentUser.fullName}</span>
+              <button onClick={() => onNavigate(Page.Profile)} className="flex items-center space-x-2 p-2 rounded-md bg-green-600 transition-colors hover:bg-green-700">
+                <UserCircleIcon className="w-8 h-8 text-white" />
+                <span className="font-medium text-white hidden lg:inline">{currentUser.fullName}</span>
               </button>
               <button
                 onClick={onLogout}
-                className="flex items-center space-x-2 bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition-colors duration-200"
+                className="flex items-center space-x-2 bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200"
                 aria-label="Logout"
               >
                 <ArrowRightOnRectangleIcon className="w-5 h-5" />

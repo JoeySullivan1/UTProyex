@@ -2,9 +2,9 @@
 
 ## Descripción General
 
-Este proyecto contiene el frontend completo para **UTProyex**, un repositorio de proyectos para estudiantes universitarios, construido con React, TypeScript y Tailwind CSS. También incluye un diseño detallado del esquema de la base de datos necesario para un backend funcional.
+Este proyecto contiene el frontend completo para **UTProyex**, un repositorio de proyectos para estudiantes universitarios, construido con React, TypeScript y Tailwind CSS. 
 
-La aplicación simula un entorno completo donde los usuarios pueden registrarse (restringido a un dominio de correo electrónico específico), iniciar sesión, ver una galería de proyectos, subir sus propios trabajos, agregar colaboradores, y comentar en los proyectos de otros.
+La aplicación contiene un entorno completo donde los usuarios pueden registrarse (restringido a un dominio de correo electrónico específico), iniciar sesión, ver una galería de proyectos, subir sus propios trabajos, agregar colaboradores, y comentar en los proyectos de otros.
 
 ### Características Principales
 

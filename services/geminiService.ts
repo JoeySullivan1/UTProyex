@@ -27,7 +27,7 @@ export const getProjectInsightsStream = async (projectDescription: string, quest
 
 
 export const calculateOriginality = async (projectDescription: string): Promise<OriginalityResponse> => {
-  const prompt = `Eres un sistema de IA que evalúa la originalidad de proyectos académicos. Analiza la siguiente descripción de proyecto y proporciona un objeto JSON con dos claves: "score" (un número entre 0 y 100 que representa la singularidad, donde 100 es completamente único) y "justification" (una breve explicación para la puntuación). La descripción es: "${projectDescription}"`;
+  const prompt = `Eres un sistema de IA que evalúa la originalidad de proyectos académicos. Analiza la siguiente descripción de proyecto y proporciona un objeto JSON con dos claves: "score" (un número entre 0 y 100 que representa la singularidad, donde 100 es completamente único, pero intenta no ser tan exigente, ya que son proyectos escolares) y "justification" (una breve explicación para la puntuación). La descripción es: "${projectDescription}"`;
 
   try {
     const response = await ai.models.generateContent({
