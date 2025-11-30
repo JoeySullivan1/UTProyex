@@ -26,7 +26,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ currentUser, onSelectProject,
         setError('');
         
         // URL del Backend Node.js
-        const BACKEND_URL = `http://localhost:4000/api/users/${currentUser.id}/projects`;
+        const BACKEND_URL = `https://utproyex.ddns.net:4000/api/users/${currentUser.id}/projects`;
         
         const response = await fetch(BACKEND_URL);
         
@@ -41,7 +41,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ currentUser, onSelectProject,
         setCollaboratingProjects(data.collaborating);
 
       } catch (err: any) {
-        console.error("Error fetching projects:", err);
+        console.error("Error al obtener proyectos:", err);
         setError('No se pudieron cargar los proyectos. Verifica que el backend esté encendido.');
       } finally {
         setIsLoading(false);

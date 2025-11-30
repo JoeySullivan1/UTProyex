@@ -28,7 +28,7 @@ const App: React.FC = () => {
     setLoading(true);
     try {
       // Conexión al Backend real
-      const response = await fetch('http://localhost:4000/api/projects');
+      const response = await fetch('https://utproyex.ddns.net:4000/api/projects');
       if (!response.ok) {
         throw new Error('Error al conectar con el servidor');
       }

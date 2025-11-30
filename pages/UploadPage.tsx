@@ -13,14 +13,14 @@ interface UploadPageProps {
   userProjectCount: number;
 }
 
-const projectCategories = ["Software", "Mecatrónica", "Energías Renovables", "Administración", "Diseño Digital", "Biotecnología", "Otro"];
+const projectCategories = ["Software", "Educación", "Agricultura", "Minería", "Emprendimiento e Innovación","Mecatrónica", "Energías Renovables", "Administración", "Diseño Digital", "Biotecnología", "Hardware", "Internet de las Cosas (IoT)", "Inteligencia Artificial", "Ciberseguridad", "Redes y Telecomunicaciones", "Salud y Ciencias Médicas", "Finanzas y Economía",  "Otro"];
 
 // --- FUNCIÓN PARA SUBIR ARCHIVOS FÍSICOS ---
 const uploadFilesToServer = async (files: File[]) => {
   const formData = new FormData();
   // Asegúrate de que el nombre 'files' coincida con upload.array('files') en tu backend
   files.forEach(file => formData.append('files', file));
-  const BACKEND_URL = 'http://localhost:4000/api/upload';
+  const BACKEND_URL = 'https://utproyex.ddns.net:4000/api/upload';
 
   const response = await fetch(BACKEND_URL, { method: 'POST', body: formData });
 
@@ -33,7 +33,7 @@ const uploadFilesToServer = async (files: File[]) => {
 
 // --- FUNCIÓN: GUARDAR PROYECTO EN BD (POST) ---
 const saveProjectToDB = async (projectData: any) => {
-    const response = await fetch('http://localhost:4000/api/projects', {
+    const response = await fetch('https://utproyex.ddns.net:4000/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(projectData)
@@ -45,7 +45,7 @@ const saveProjectToDB = async (projectData: any) => {
 
 // --- FUNCIÓN: ACTUALIZAR PROYECTO EN BD (PUT) ---
 const updateProjectInDB = async (id: string, projectData: any) => {
-    const response = await fetch(`http://localhost:4000/api/projects/${id}`, {
+    const response = await fetch(`https://utproyex.ddns.net:4000/api/projects/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(projectData)
@@ -57,7 +57,7 @@ const updateProjectInDB = async (id: string, projectData: any) => {
 
 // --- FUNCIÓN NUEVA: BUSCAR USUARIO EN BD (Para reconocer usuarios registrados) ---
 const findUserByEmail = async (email: string) => {
-    const response = await fetch(`http://localhost:4000/api/users?email=${email}`);
+    const response = await fetch(`https://utproyex.ddns.net:4000/api/users?email=${email}`);
     if (response.status === 404) return null;
     if (!response.ok) throw new Error('Error al buscar usuario');
     return await response.json(); // Devuelve { id, fullName, email }
@@ -169,7 +169,6 @@ const UploadPage: React.FC<UploadPageProps> = ({ currentUser, allUsers, onAddPro
       if (newFiles.length > 0) {
           const uploadedData = await uploadFilesToServer(newFiles);
           
-          // --- CORRECCIÓN AQUÍ ---
           // Se asegura de leer 'originalname' (estándar) o 'originalName' por si acaso.
           const uploadedProjectFiles = uploadedData.map((fileData: any, index: number) => ({
               id: `temp-${Date.now()}-${index}`, 
@@ -285,7 +284,7 @@ const UploadPage: React.FC<UploadPageProps> = ({ currentUser, allUsers, onAddPro
                     Estado del Proyecto: <span className="font-bold text-emerald-600">{progress}%</span>
                 </label>
                 <label htmlFor="description" className="block text-xs font-medium text-gray-500">-Es el estado en el que se encuentra el proyecto al momento de la entrega final, refleja si es posible continuarlo</label>
-                <input type="range" id="progress" min="0" max="100" value={progress} onChange={(e) => setProgress(Number(e.target.value))} className="mt-1 block w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-emerald-600" />
+                <input type="range" id="progress" min="30" max="100" value={progress} onChange={(e) => setProgress(Number(e.target.value))} className="mt-1 block w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-emerald-600" />
             </div>
         </div>
 

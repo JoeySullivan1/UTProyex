@@ -5,7 +5,7 @@ import { UserGroupIcon, PaperClipIcon, CalendarDaysIcon, ChatBubbleLeftRightIcon
 import Spinner from '../components/Spinner';
 
 // URL del Backend
-const API_URL = 'http://localhost:4000/api';
+const API_URL = 'https://utproyex.ddns.net:4000/api';
 
 // --- COMPONENTE CHAT IA ---
 interface AIChatProps {

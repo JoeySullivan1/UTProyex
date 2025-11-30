@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Project } from '../types';
 
-const API_URL = 'http://localhost:4000/api';
+const API_URL = 'https://utproyex.ddns.net:4000/api';
 
 export const getProjects = async () => {
     const response = await axios.get(`${API_URL}/projects`);
