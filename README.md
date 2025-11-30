@@ -1,4 +1,4 @@
-# UTProyex - Frontend y Esquema de Base de Datos
+# UTProyex - Frontend
 
 ## Descripción General
 
