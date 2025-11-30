@@ -63,6 +63,54 @@ const findUserByEmail = async (email: string) => {
     return await response.json(); // Devuelve { id, fullName, email }
 };
 
+// --- FUNCIÓN PARA SUBIR ARCHIVOS FÍSICOS ---
+const uploadFilesToServer = async (files: File[]) => {
+  const formData = new FormData();
+  // Asegúrate de que el nombre 'files' coincida con upload.array('files') en tu backend
+  files.forEach(file => formData.append('files', file));
+  const BACKEND_URL = 'http://189.154.34.131:4000/api/upload';
+
+  const response = await fetch(BACKEND_URL, { method: 'POST', body: formData });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Error subiendo archivos: ${errorText}`);
+  }
+  return await response.json();
+};
+
+// --- FUNCIÓN: GUARDAR PROYECTO EN BD (POST) ---
+const saveProjectToDB = async (projectData: any) => {
+    const response = await fetch('http://189.154.34.131:4000/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(projectData)
+    });
+
+    if (!response.ok) throw new Error('Error al guardar el proyecto en la base de datos.');
+    return await response.json();
+};
+
+// --- FUNCIÓN: ACTUALIZAR PROYECTO EN BD (PUT) ---
+const updateProjectInDB = async (id: string, projectData: any) => {
+    const response = await fetch(`http://189.154.34.131:4000/api/projects/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(projectData)
+    });
+
+    if (!response.ok) throw new Error('Error al actualizar el proyecto.');
+    return await response.json();
+};
+
+// --- FUNCIÓN NUEVA: BUSCAR USUARIO EN BD (Para reconocer usuarios registrados) ---
+const findUserByEmail = async (email: string) => {
+    const response = await fetch(`http://189.154.34.131:4000/api/users?email=${email}`);
+    if (response.status === 404) return null;
+    if (!response.ok) throw new Error('Error al buscar usuario');
+    return await response.json(); // Devuelve { id, fullName, email }
+};
+
 const UploadPage: React.FC<UploadPageProps> = ({ currentUser, allUsers, onAddProject, projectToEdit, onUpdateProject, userProjectCount }) => {
   const isEditMode = !!projectToEdit;
   
